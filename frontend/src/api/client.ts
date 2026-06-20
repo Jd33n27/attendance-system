@@ -185,4 +185,25 @@ export const client = {
       body: JSON.stringify({ active }),
     });
   },
+
+  // Verify admin token
+  verifyAdminToken: (adminToken: string): Promise<{ status: string; message: string }> => {
+    const headers: Record<string, string> = {};
+    if (adminToken) {
+      headers['Authorization'] = `Bearer ${adminToken}`;
+    }
+    return fetchAPI<{ status: string; message: string }>('/api/admin/verify', {
+      method: 'POST',
+      headers,
+    });
+  },
+
+  // Login user via their QR Key card
+  login: (qrKey: string): Promise<User> => {
+    return fetchAPI<User>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ qr_key: qrKey }),
+    });
+  },
 };
+

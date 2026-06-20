@@ -58,6 +58,7 @@ func main() {
 
 	// Auth routes
 	mux.HandleFunc("POST /api/auth/register", handlers.RegisterUser)
+	mux.HandleFunc("POST /api/auth/login", handlers.LoginUser)
 
 	// QR code routes
 	mux.HandleFunc("POST /api/qr/generate", handlers.GenerateDailyQR)
@@ -71,6 +72,8 @@ func main() {
 	mux.HandleFunc("GET /api/admin/logs", handlers.GetAdminLogs)
 	mux.HandleFunc("GET /api/admin/users", handlers.GetAdminUsers)
 	mux.HandleFunc("POST /api/admin/users/{user_id}/toggle-active", handlers.ToggleUserActive)
+	mux.HandleFunc("POST /api/admin/verify", handlers.VerifyAdminToken)
+
 
 	// Health check endpoint (critical for Render hosting)
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {

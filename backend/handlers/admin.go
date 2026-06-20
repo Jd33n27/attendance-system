@@ -257,3 +257,21 @@ func ToggleUserActive(w http.ResponseWriter, r *http.Request) {
 		"message": fmt.Sprintf("User profile successfully %s", statusStr),
 	})
 }
+
+// VerifyAdminToken handles POST /api/admin/verify
+func VerifyAdminToken(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		RespondWithError(w, http.StatusMethodNotAllowed, "Method not allowed")
+		return
+	}
+
+	if !checkAdminAuth(w, r) {
+		return
+	}
+
+	RespondWithJSON(w, http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Authorized",
+	})
+}
+

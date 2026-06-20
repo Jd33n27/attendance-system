@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import type { User } from './api/client';
+import { LoginTab } from './components/LoginTab';
 import { RegisterTab } from './components/RegisterTab';
 import { ScannerTab } from './components/ScannerTab';
 import { HistoryTab } from './components/HistoryTab';
 import { AdminTab } from './components/AdminTab';
 
-type Tab = 'scanner' | 'register' | 'history' | 'admin';
+type Tab = 'login' | 'register' | 'scanner' | 'history' | 'admin';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('scanner');
+  const [activeTab, setActiveTab] = useState<Tab>('login');
   const [user, setUser] = useState<User | null>(null);
+  const [unrecognizedKey, setUnrecognizedKey] = useState<string | null>(null);
 
   // Load user profile on mount
   useEffect(() => {
@@ -17,18 +19,32 @@ function App() {
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
+        setActiveTab('scanner'); // switch directly to scanner if logged in
       } catch (e) {
         localStorage.removeItem('oalcda_active_user');
+        setActiveTab('login');
       }
     } else {
-      // Direct unregistered users to register page
-      setActiveTab('register');
+      setActiveTab('login');
     }
   }, []);
+
+  const handleLoginSuccess = (loggedInUser: User) => {
+    localStorage.setItem('oalcda_active_user', JSON.stringify(loggedInUser));
+    setUser(loggedInUser);
+    setUnrecognizedKey(null);
+    setActiveTab('scanner');
+  };
+
+  const handleLoginNotFound = (scannedKey: string) => {
+    setUnrecognizedKey(scannedKey);
+    setActiveTab('register'); // Redirect to registration
+  };
 
   const handleRegisterSuccess = (newUser: User) => {
     localStorage.setItem('oalcda_active_user', JSON.stringify(newUser));
     setUser(newUser);
+    setUnrecognizedKey(null);
     setActiveTab('scanner'); // switch directly to scanner on registration
   };
 
@@ -36,7 +52,8 @@ function App() {
     if (confirm("Are you sure you want to disconnect? This will log you out from this device.")) {
       localStorage.removeItem('oalcda_active_user');
       setUser(null);
-      setActiveTab('register');
+      setUnrecognizedKey(null);
+      setActiveTab('login');
     }
   };
 
@@ -73,14 +90,27 @@ function App() {
             </button>
           </>
         ) : (
-          <button 
-            type="button" 
-            className={`nav-button ${activeTab === 'register' ? 'active' : ''}`}
-            onClick={() => setActiveTab('register')}
-          >
-            <span className="nav-icon">📝</span>
-            <span>Register</span>
-          </button>
+          <>
+            <button 
+              type="button" 
+              className={`nav-button ${activeTab === 'login' ? 'active' : ''}`}
+              onClick={() => {
+                setUnrecognizedKey(null);
+                setActiveTab('login');
+              }}
+            >
+              <span className="nav-icon">📇</span>
+              <span>Login</span>
+            </button>
+            <button 
+              type="button" 
+              className={`nav-button ${activeTab === 'register' ? 'active' : ''}`}
+              onClick={() => setActiveTab('register')}
+            >
+              <span className="nav-icon">📝</span>
+              <span>Register</span>
+            </button>
+          </>
         )}
         <button 
           type="button" 
@@ -108,8 +138,12 @@ function App() {
 
       {/* Main Tab Render Views */}
       <main style={{ flexGrow: 1 }}>
+        {activeTab === 'login' && !user && (
+          <LoginTab onLoginSuccess={handleLoginSuccess} onLoginNotFound={handleLoginNotFound} />
+        )}
+
         {activeTab === 'register' && !user && (
-          <RegisterTab onRegisterSuccess={handleRegisterSuccess} />
+          <RegisterTab onRegisterSuccess={handleRegisterSuccess} unrecognizedKey={unrecognizedKey} />
         )}
 
         {activeTab === 'scanner' && user && (
@@ -125,20 +159,30 @@ function App() {
         )}
 
         {/* Catch-all warning if user gets into tab without registering */}
-        {activeTab !== 'admin' && !user && activeTab !== 'register' && (
+        {activeTab !== 'admin' && !user && activeTab !== 'register' && activeTab !== 'login' && (
           <div className="panel" style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '48px', display: 'block', marginBottom: '16px' }}>⚠️</span>
             <h2 style={{ marginBottom: '8px' }}>Profile Required</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
-              You must register a worker profile before you can access the scanner or shift logs.
+              You must register or log in to a worker profile before you can access the scanner or shift logs.
             </p>
-            <button 
-              type="button" 
-              className="btn-primary" 
-              onClick={() => setActiveTab('register')}
-            >
-              Go to Registration
-            </button>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button 
+                type="button" 
+                className="btn-primary" 
+                onClick={() => setActiveTab('login')}
+              >
+                Go to Login
+              </button>
+              <button 
+                type="button" 
+                className="btn-disconnect" 
+                style={{ border: '1px solid var(--panel-border)', borderRadius: '12px', padding: '12px 24px' }}
+                onClick={() => setActiveTab('register')}
+              >
+                Go to Registration
+              </button>
+            </div>
           </div>
         )}
       </main>
@@ -152,3 +196,4 @@ function App() {
 }
 
 export default App;
+

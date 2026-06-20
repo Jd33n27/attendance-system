@@ -10,6 +10,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
   const [logs, setLogs] = useState<AttendanceLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showBadge, setShowBadge] = useState(false);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
@@ -62,9 +63,75 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
         </button>
       </div>
 
+      {/* Collapsible Worker Badge Button */}
+      <div style={{ marginBottom: '20px', borderBottom: '1px solid var(--panel-border)', paddingBottom: '16px' }}>
+        <button
+          type="button"
+          className="manual-scan-trigger"
+          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => setShowBadge(!showBadge)}
+        >
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>📇 {showBadge ? 'Hide' : 'Show'} My Digital Worker Card</span>
+          <span style={{ fontSize: '12px' }}>{showBadge ? '▲' : '▼'}</span>
+        </button>
+
+        {showBadge && (
+          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+            <div style={{
+              border: '1px solid var(--panel-border)',
+              background: 'linear-gradient(145deg, var(--input-bg), var(--panel-bg))',
+              borderRadius: '16px',
+              padding: '20px',
+              width: '100%',
+              maxWidth: '300px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+              borderTop: '4px solid var(--primary)',
+              textAlign: 'left'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid var(--panel-border)', paddingBottom: '8px' }}>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '12px', color: 'var(--primary)', letterSpacing: '1px' }}>ORILE AGEGE LCDA</div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Official Staff ID Card</div>
+                </div>
+                <div className="logo-badge" style={{ padding: '2px 6px', fontSize: '8px' }}>STAFF</div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '12px 0' }}>
+                <div style={{ background: '#fff', padding: '6px', borderRadius: '8px', display: 'inline-block' }}>
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(user.qr_key)}`}
+                    alt="Worker QR Code"
+                    style={{ width: '120px', height: '120px', display: 'block' }}
+                  />
+                </div>
+                <div style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', marginTop: '6px', background: 'var(--panel-border)', padding: '2px 6px', borderRadius: '4px' }}>
+                  {user.qr_key}
+                </div>
+              </div>
+
+              <div style={{ gap: '8px', display: 'flex', flexDirection: 'column', fontSize: '13px' }}>
+                <div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Name</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user.name}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Department</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{user.department}</div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)', borderTop: '1px dashed var(--panel-border)', paddingTop: '6px', marginTop: '2px' }}>
+                  <span>ID: {user.id.slice(0, 8)}...</span>
+                  <span>Joined: {new Date(user.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
         Viewing historical clock-in and clock-out logs for <strong>{user.name}</strong>.
       </p>
+
 
       {error && (
         <div className="feedback-card error" style={{ marginBottom: '20px' }}>

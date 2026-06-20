@@ -35,6 +35,7 @@ export const AdminTab: React.FC = () => {
 
   // Common error states
   const [error, setError] = useState<string | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
 
   const fetchActiveQR = useCallback(async () => {
     setQRLoading(true);
@@ -90,12 +91,21 @@ export const AdminTab: React.FC = () => {
     }
   }, [subTab, isAuthorized, fetchActiveQR, fetchReports, fetchUsers]);
 
-  const handleAuthorize = (e: React.FormEvent) => {
+  const handleAuthorize = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token.trim()) return;
-    localStorage.setItem('oalcda_admin_token', token.trim());
-    setIsAuthorized(true);
+    setAuthLoading(true);
     setError(null);
+    try {
+      await client.verifyAdminToken(token.trim());
+      localStorage.setItem('oalcda_admin_token', token.trim());
+      setIsAuthorized(true);
+    } catch (err: any) {
+      setError(err.message || 'Authorization failed. Invalid token.');
+      setIsAuthorized(false);
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleDisconnect = () => {
@@ -302,8 +312,8 @@ export const AdminTab: React.FC = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn-primary">
-              🔒 Authorise Session
+            <button type="submit" className="btn-primary" disabled={authLoading}>
+              {authLoading ? 'Verifying...' : '🔒 Authorise Session'}
             </button>
           </form>
         </div>
