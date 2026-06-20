@@ -1,0 +1,25 @@
+# Dependency Directories
+node_modules/
+vendor/
+
+# Environment & Secrets (Crucial Security)
+.env
+.env.*
+*.pem
+*.key
+
+# Backend Binaries & Temp Files
+backend/oalcda-attendance
+backend/.env
+backend/*.exe
+backend/*.test
+
+# Frontend Build Outputs
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Operating System Logs
+.DS_Store
+Thumbs.db
+*.log

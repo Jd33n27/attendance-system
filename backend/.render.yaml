@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: oalcda-attendance-api
+    runtime: go
+    buildCommand: go build -o oalcda-attendance main.go
+    startCommand: ./oalcda-attendance
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: QR_SECRET
+        sync: false
