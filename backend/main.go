@@ -74,6 +74,9 @@ func main() {
 	mux.HandleFunc("POST /api/admin/users/{user_id}/toggle-active", handlers.ToggleUserActive)
 	mux.HandleFunc("POST /api/admin/verify", handlers.VerifyAdminToken)
 
+	// API Documentation routes (Redoc)
+	mux.HandleFunc("GET /docs", handlers.ServeDocsHTML)
+	mux.HandleFunc("GET /api/docs/openapi.json", handlers.ServeOpenAPIJSON)
 
 	// Health check endpoint (critical for Render hosting)
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {

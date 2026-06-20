@@ -1,0 +1,824 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lagos Local Council Attendance Portal API",
+    "description": "Comprehensive API documentation for the Lagos Local Council Attendance Portal. This portal allows workers to register profiles, authenticate with credentials, and scan daily QR codes to log clock-in and clock-out shifts. It also provides admin dashboards for tracking, toggling profile states, and auditing logs.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current Server Host"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "AdminBearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Bearer token used for administrative endpoints. Sent as 'Authorization: Bearer <admin_token>'."
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique database identifier for the user profile."
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of the worker."
+          },
+          "department": {
+            "type": "string",
+            "description": "Department the worker belongs to."
+          },
+          "qr_key": {
+            "type": "string",
+            "description": "Dynamic lookup slug assigned to the worker."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the profile was registered."
+          }
+        },
+        "required": ["id", "name", "department", "qr_key", "created_at"]
+      },
+      "AttendanceLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique database identifier for this log item."
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User identifier linked to this attendance log."
+          },
+          "clock_in": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the worker clocked in."
+          },
+          "clock_out": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the worker clocked out."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "The target shift date in YYYY-MM-DD format."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Log creation timestamp."
+          },
+          "duration_hours": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "Calculated shift duration in hours (only present if clocked out)."
+          }
+        },
+        "required": ["id", "user_id", "clock_in", "date", "created_at"]
+      },
+      "AdminLogItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_name": {
+            "type": "string",
+            "description": "Full name of the worker."
+          },
+          "department": {
+            "type": "string",
+            "description": "Department the worker belongs to."
+          },
+          "clock_in": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "clock_out": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_hours": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          }
+        },
+        "required": ["id", "user_id", "user_name", "department", "clock_in", "date", "created_at"]
+      },
+      "AdminUserItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "qr_key": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the user profile is active and allowed to log shifts."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "total_attendance": {
+            "type": "integer",
+            "description": "Total count of logged attendance shifts."
+          }
+        },
+        "required": ["id", "name", "department", "qr_key", "active", "created_at", "total_attendance"]
+      },
+      "DailyQR": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qr_code_string": {
+            "type": "string",
+            "description": "Cryptographically secure random suffix code string."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date matching today's daily code (YYYY-MM-DD)."
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Base64 encoded data URI of the QR code PNG image."
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "qr_code_string", "date", "image_url", "active", "created_at"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Detailed explanation of the error."
+          }
+        },
+        "required": ["error"]
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register Worker Profile",
+        "description": "Creates a new worker account. Duplicates (Name + Department matching case-insensitively) are rejected with a conflict error.",
+        "tags": ["Authentication & Profile"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Full name of the staff member.",
+                    "example": "Oluwaseun Adewale"
+                  },
+                  "department": {
+                    "type": "string",
+                    "description": "Assigned staff department.",
+                    "example": "Health Services"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Worker password used to secure account.",
+                    "example": "mySecureP@ss1"
+                  }
+                },
+                "required": ["name", "department", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Profile successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed body or missing properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Worker with this Name and Department is already registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database insertion failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Worker Authenticate/Login",
+        "description": "Authenticates a worker profile with Name, Department, and Password. Rejects inactive or suspended workers.",
+        "tags": ["Authentication & Profile"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Oluwaseun Adewale"
+                  },
+                  "department": {
+                    "type": "string",
+                    "example": "Health Services"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "mySecureP@ss1"
+                  }
+                },
+                "required": ["name", "department", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials in request body."
+          },
+          "401": {
+            "description": "Invalid credentials (incorrect name/dept or wrong password).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Worker profile is suspended.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal database error."
+          }
+        }
+      }
+    },
+    "/api/qr/generate": {
+      "post": {
+        "summary": "Generate Daily QR Code",
+        "description": "Creates a cryptographically secure daily QR code containing today's date and a random 16-byte hex suffix. Overwrites any existing QR for the day.",
+        "tags": ["QR Management"],
+        "security": [
+          {
+            "AdminBearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Daily QR generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyQR"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer token authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "QR encoding or database saving failed."
+          }
+        }
+      }
+    },
+    "/api/qr/active": {
+      "get": {
+        "summary": "Get Today's Active Daily QR Code",
+        "description": "Fetches the active QR code for today (Lagos timezone date matching YYYY-MM-DD). If no QR code has been generated, returns 404.",
+        "tags": ["QR Management"],
+        "responses": {
+          "200": {
+            "description": "Today's active QR details found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyQR"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No active QR generated for today.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal database querying error."
+          }
+        }
+      }
+    },
+    "/api/attendance/scan": {
+      "post": {
+        "summary": "Clock In/Out",
+        "description": "Records clock-in or clock-out timestamp. The server verifies that the scanned QR code matches today's active daily token. Rejects duplicate clock-ins, clock-outs, and clock-out attempts without an active clock-in.",
+        "tags": ["Attendance Logging"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "qr_string": {
+                    "type": "string",
+                    "description": "Scanned QR code content string.",
+                    "example": "OALCDA_2026-06-20_6f3ba0e1a8a25c11"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Registered worker user ID.",
+                    "example": "c6114eb3-fb1c-43f1-b8d4-bb373f1d2c69"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": ["in", "out"],
+                    "description": "Clocking action: 'in' to clock in, 'out' to clock out.",
+                    "example": "in"
+                  }
+                },
+                "required": ["qr_string", "user_id", "action"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully clocked in or clocked out.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Clocked in successfully at 09:15:30"
+                    },
+                    "clock_time": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "action": {
+                      "type": "string",
+                      "example": "in"
+                    }
+                  },
+                  "required": ["status", "message", "clock_time", "action"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed (invalid/expired/inactive QR code, or duplicate shift state).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User profile not found."
+          },
+          "500": {
+            "description": "Failed to log attendance."
+          }
+        }
+      }
+    },
+    "/api/attendance/logs/{user_id}": {
+      "get": {
+        "summary": "Get Worker Attendance History",
+        "description": "Fetches a lists of all attendance shift logs for a specific worker, sorted from newest to oldest.",
+        "tags": ["Attendance Logging"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Worker user ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log retrieval successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "logs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AttendanceLog"
+                      }
+                    }
+                  },
+                  "required": ["user_id", "logs"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Worker not found."
+          },
+          "500": {
+            "description": "Database query failed."
+          }
+        }
+      }
+    },
+    "/api/admin/logs": {
+      "get": {
+        "summary": "Admin Logs Query",
+        "description": "Administrative endpoint to pull and filter attendance logs across all registered workers. Requires admin token.",
+        "tags": ["Admin Dashboard"],
+        "security": [
+          {
+            "AdminBearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter for shift logs on a specific date (YYYY-MM-DD)."
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start range filter (YYYY-MM-DD)."
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End range filter (YYYY-MM-DD)."
+          },
+          {
+            "name": "department",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by department name."
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filter by a specific worker's user ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of logs retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminLogItem"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access."
+          },
+          "500": {
+            "description": "Database query execution failure."
+          }
+        }
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "summary": "Admin Users Query",
+        "description": "Administrative endpoint to list all registered workers along with their registration timestamp, active status, and total attendance count.",
+        "tags": ["Admin Dashboard"],
+        "security": [
+          {
+            "AdminBearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users successfully queried.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminUserItem"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access."
+          },
+          "500": {
+            "description": "Database connection or querying error."
+          }
+        }
+      }
+    },
+    "/api/admin/users/{user_id}/toggle-active": {
+      "post": {
+        "summary": "Toggle Profile Active Status",
+        "description": "Administrative endpoint to toggle the active status of a user. Suspending (setting to inactive) prevents workers from logging clock-ins or clock-outs.",
+        "tags": ["Admin Dashboard"],
+        "security": [
+          {
+            "AdminBearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Worker user ID to modify."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "boolean",
+                    "description": "Desired active status state.",
+                    "example": false
+                  }
+                },
+                "required": ["active"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status toggled successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User profile successfully deactivated"
+                    }
+                  },
+                  "required": ["status", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed request body."
+          },
+          "401": {
+            "description": "Unauthorized access."
+          },
+          "404": {
+            "description": "Worker user ID not found."
+          },
+          "500": {
+            "description": "Database update failure."
+          }
+        }
+      }
+    },
+    "/api/admin/verify": {
+      "post": {
+        "summary": "Verify Admin Token",
+        "description": "Helper endpoint to check if the administrative bearer token is valid. Used by client applications on login.",
+        "tags": ["Admin Dashboard"],
+        "security": [
+          {
+            "AdminBearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bearer token is valid and authorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Authorized"
+                    }
+                  },
+                  "required": ["status", "message"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or missing token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Service Health Check",
+        "description": "Liveness endpoint indicating if service is active and responsive.",
+        "tags": ["System Operations"],
+        "responses": {
+          "200": {
+            "description": "Service is healthy.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "OK"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

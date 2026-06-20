@@ -135,6 +135,13 @@ if [ "$admin_verify_fail_status" -ne 401 ]; then
 fi
 echo "Admin token invalidation correctly rejected (Status: 401)"
 
+# 12. Check API Documentation
+echo "Testing API docs HTML endpoint..."
+call_api "GET" "/docs" "" ""
+
+echo "Testing OpenAPI JSON spec endpoint..."
+call_api "GET" "/api/docs/openapi.json" "" ""
+
 echo "--------------------------------------"
 echo "✅ ALL API TESTS COMPLETED SUCCESSFULLY!"
 
