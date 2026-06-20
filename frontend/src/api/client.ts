@@ -96,10 +96,10 @@ async function fetchAPI<T>(path: string, options: RequestInit = {}): Promise<T> 
  */
 export const client = {
   // Register a new user
-  register: (name: string, department: string): Promise<User> => {
+  register: (name: string, department: string, password?: string): Promise<User> => {
     return fetchAPI<User>('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ name, department }),
+      body: JSON.stringify({ name, department, password }),
     });
   },
 
@@ -198,11 +198,11 @@ export const client = {
     });
   },
 
-  // Login user via their QR Key card
-  login: (qrKey: string): Promise<User> => {
+  // Login user via Name + Department + Password credentials
+  login: (name: string, department: string, password?: string): Promise<User> => {
     return fetchAPI<User>('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ qr_key: qrKey }),
+      body: JSON.stringify({ name, department, password }),
     });
   },
 };

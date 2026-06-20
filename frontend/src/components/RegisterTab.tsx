@@ -10,6 +10,7 @@ interface RegisterTabProps {
 export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unrecognizedKey }) => {
   const [name, setName] = useState('');
   const [department, setDepartment] = useState('Operations');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [registeredUser, setRegisteredUser] = useState<User | null>(null);
@@ -21,11 +22,16 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
       return;
     }
 
+    if (!password.trim() || password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const user = await client.register(name.trim(), department);
+      const user = await client.register(name.trim(), department, password);
       setRegisteredUser(user);
     } catch (err: any) {
       setError(err.message || 'Failed to register. Please check if backend is running.');
@@ -171,6 +177,22 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
             ))}
           </select>
         </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Choose Password</label>
+          <input
+            id="password"
+            type="password"
+            className="input-control"
+            placeholder="Min 6 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+            required
+            minLength={6}
+          />
+        </div>
+
 
         <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '8px' }}>
           {loading ? 'Registering...' : '📝 Register & Connect'}

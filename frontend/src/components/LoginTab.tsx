@@ -1,214 +1,122 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import React, { useState } from 'react';
 import { client } from '../api/client';
 import type { User } from '../api/client';
 
 interface LoginTabProps {
   onLoginSuccess: (user: User) => void;
-  onLoginNotFound: (unrecognizedKey: string) => void;
+  onLoginNotFound?: (unrecognizedKey: string) => void; // kept for TS signature compatibility in App.tsx
 }
 
-export const LoginTab: React.FC<LoginTabProps> = ({ onLoginSuccess, onLoginNotFound }) => {
-  const [cameraActive, setCameraActive] = useState(false);
+export const LoginTab: React.FC<LoginTabProps> = ({ onLoginSuccess }) => {
+  const [name, setName] = useState('');
+  const [department, setDepartment] = useState('Operations');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showManual, setShowManual] = useState(false);
-  const [manualKey, setManualKey] = useState('');
 
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const scannerId = "login-qr-reader";
+  const departments = [
+    'Operations',
+    'Administration',
+    'Finance',
+    'Security',
+    'Engineering & Works',
+    'Waste Management',
+    'Transport & Logistics',
+    'Health Services',
+    'Environment & Sanitation'
+  ];
 
-  // Cleanup scanner on unmount
-  useEffect(() => {
-    return () => {
-      stopScanner();
-    };
-  }, []);
-
-  const startScanner = async () => {
-    setError(null);
-    setCameraActive(true);
-
-    // Wait for the DOM viewport element to render
-    setTimeout(async () => {
-      try {
-        const html5Qrcode = new Html5Qrcode(scannerId);
-        scannerRef.current = html5Qrcode;
-
-        await html5Qrcode.start(
-          { facingMode: 'environment' },
-          {
-            fps: 10,
-            qrbox: (width, height) => {
-              const size = Math.min(width, height) * 0.7;
-              return { width: size, height: size };
-            },
-          },
-          async (decodedText) => {
-            await handleLogin(decodedText);
-          },
-          () => {
-            // Quiet frame failures
-          }
-        );
-      } catch (err: any) {
-        console.error("Camera access failed:", err);
-        setError('Could not access camera. Please allow camera permissions or type your key manually.');
-        setCameraActive(false);
-      }
-    }, 100);
-  };
-
-  const stopScanner = async () => {
-    if (scannerRef.current) {
-      try {
-        if (scannerRef.current.isScanning) {
-          await scannerRef.current.stop();
-        }
-      } catch (err) {
-        console.error("Failed to stop scanner:", err);
-      } finally {
-        scannerRef.current = null;
-        setCameraActive(false);
-      }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      setError('Please enter your full name');
+      return;
     }
-  };
-
-  const handleLogin = async (qrKey: string) => {
-    if (navigator.vibrate) {
-      navigator.vibrate(150);
+    if (!password.trim()) {
+      setError('Please enter your password');
+      return;
     }
 
     setLoading(true);
     setError(null);
-    await stopScanner();
 
     try {
-      const user = await client.login(qrKey.trim());
+      const user = await client.login(name.trim(), department, password);
       onLoginSuccess(user);
     } catch (err: any) {
-      if (err.message && (err.message.includes('not found') || err.message.includes('404'))) {
-        // Unrecognized QR Key: redirect to registration
-        onLoginNotFound(qrKey);
-      } else {
-        setError(err.message || 'An error occurred during verification.');
-      }
+      setError(err.message || 'Login failed. Invalid name, department, or password.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleManualSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!manualKey.trim()) return;
-    handleLogin(manualKey.trim());
   };
 
   return (
     <div className="panel">
       <h2 style={{ marginBottom: '8px', fontWeight: 600 }}>Worker Log In</h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
-        Scan your personal worker QR Badge card to log in and unlock your attendance dashboard.
+        Enter your Name, Department, and chosen Password to access your portal.
       </p>
 
       {error && (
         <div className="feedback-card error" style={{ marginBottom: '20px' }}>
           <div className="feedback-icon">⚠️</div>
           <div>
-            <div className="feedback-title">Log In Failed</div>
+            <div className="feedback-title">Access Denied</div>
             <div className="feedback-msg">{error}</div>
           </div>
         </div>
       )}
 
-      {/* Camera Feed Viewport */}
-      {cameraActive ? (
-        <div>
-          <div className="scanner-viewport">
-            <div id={scannerId} style={{ width: '100%', height: '100%' }}></div>
-            <div className="scanner-overlay">
-              <div className="scanner-target">
-                <div className="scanner-laser"></div>
-              </div>
-            </div>
-          </div>
-          
-          <button 
-            type="button" 
-            className="btn-primary" 
-            style={{ background: 'var(--error)', boxShadow: '0 4px 12px rgba(239,68,68,0.2)', marginBottom: '16px' }}
-            onClick={stopScanner}
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="fullName">Full Name</label>
+          <input
+            id="fullName"
+            type="text"
+            className="input-control"
+            placeholder="e.g. Adewale Johnson"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={loading}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="dept">Department</label>
+          <select
+            id="dept"
+            className="input-control"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
             disabled={loading}
           >
-            🛑 Cancel Camera
-          </button>
+            {departments.map((dept) => (
+              <option key={dept} value={dept}>
+                {dept}
+              </option>
+            ))}
+          </select>
         </div>
-      ) : (
-        <div>
-          <div className="scanner-viewport" style={{ background: 'var(--input-bg)', marginBottom: '16px' }}>
-            <div className="scanner-placeholder">
-              <div className="scanner-placeholder-icon">📇</div>
-              <div style={{ fontWeight: 500, fontSize: '15px' }}>Scanner Ready</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Point your worker card badge at your camera
-              </div>
-            </div>
-          </div>
 
-          <button 
-            type="button" 
-            className="btn-primary" 
-            onClick={startScanner}
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            className="input-control"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
-            style={{ marginBottom: '16px' }}
-          >
-            🔍 Scan Worker Card QR
-          </button>
+            required
+          />
         </div>
-      )}
 
-      {/* Manual input fallback */}
-      <div className="manual-scan-box" style={{ borderTop: '1px solid var(--panel-border)', paddingTop: '16px' }}>
-        {!showManual ? (
-          <button 
-            type="button"
-            className="manual-scan-trigger"
-            onClick={() => setShowManual(true)}
-          >
-            Lost your badge? Enter Worker Key manually
-          </button>
-        ) : (
-          <form onSubmit={handleManualSubmit} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <input
-              type="text"
-              className="input-control"
-              style={{ padding: '10px 12px', fontSize: '14px', flex: 1 }}
-              placeholder="e.g. adewale-johnson_e3a9f02b"
-              value={manualKey}
-              onChange={(e) => setManualKey(e.target.value)}
-              disabled={loading}
-              required
-            />
-            <button 
-              type="submit" 
-              className="btn-primary" 
-              style={{ width: 'auto', padding: '10px 16px', fontSize: '14px' }}
-              disabled={loading || !manualKey.trim()}
-            >
-              Log In
-            </button>
-            <button
-              type="button"
-              className="btn-disconnect"
-              style={{ padding: '8px' }}
-              onClick={() => { setShowManual(false); setManualKey(''); }}
-              disabled={loading}
-            >
-              Cancel
-            </button>
-          </form>
-        )}
-      </div>
+        <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '8px' }}>
+          {loading ? 'Authenticating...' : '🔑 Log In to Portal'}
+        </button>
+      </form>
     </div>
   );
 };

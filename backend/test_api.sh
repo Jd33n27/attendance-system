@@ -71,7 +71,7 @@ call_api "GET" "/health" "" ""
 echo "Testing user registration..."
 rand_id=$RANDOM
 reg_name="Tester Joe $rand_id"
-reg_response=$(call_api "POST" "/api/auth/register" "{\"name\":\"$reg_name\",\"department\":\"Engineering\"}" "")
+reg_response=$(call_api "POST" "/api/auth/register" "{\"name\":\"$reg_name\",\"department\":\"Engineering\",\"password\":\"testerpassword123\"}" "")
 user_id=$(echo "$reg_response" | grep -o '"id":"[^"]*' | cut -d'"' -f4)
 qr_key=$(echo "$reg_response" | grep -o '"qr_key":"[^"]*' | cut -d'"' -f4)
 echo "Created User ID: $user_id"
@@ -101,7 +101,7 @@ call_api "GET" "/api/attendance/logs/$user_id" "" ""
 
 # 8. Test Duplicate Registration (Expects 409 Conflict)
 echo "Testing duplicate registration rejection..."
-status=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" -d "{\"name\":\"$reg_name\",\"department\":\"Engineering\"}" $API_URL/api/auth/register)
+status=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" -d "{\"name\":\"$reg_name\",\"department\":\"Engineering\",\"password\":\"testerpassword123\"}" $API_URL/api/auth/register)
 if [ "$status" -ne 409 ]; then
   echo "ERROR: Expected 409 Conflict for duplicate registration, got $status"
   exit 1
@@ -109,13 +109,13 @@ fi
 echo "Duplicate registration correctly blocked (Status: 409)"
 
 # 9. Test Login (Expects 200 OK)
-echo "Testing login with QR key..."
-login_response=$(curl -s -X POST -H "Content-Type: application/json" -d "{\"qr_key\":\"$qr_key\"}" $API_URL/api/auth/login)
+echo "Testing login with Name and Password..."
+login_response=$(curl -s -X POST -H "Content-Type: application/json" -d "{\"name\":\"$reg_name\",\"department\":\"Engineering\",\"password\":\"testerpassword123\"}" $API_URL/api/auth/login)
 if [[ ! "$login_response" =~ "$user_id" ]]; then
   echo "ERROR: Login response did not contain user_id"
   exit 1
 fi
-echo "Login succeeded with valid QR key"
+echo "Login succeeded with valid Name and Password credentials"
 
 # 10. Test Admin Verify Token (Expects 200 OK)
 echo "Testing admin token verification (success)..."

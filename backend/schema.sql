@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(255) NOT NULL,
   department VARCHAR(255),
   qr_key VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255),
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
