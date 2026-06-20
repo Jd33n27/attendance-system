@@ -504,6 +504,12 @@ select.input-control {
   box-shadow: 0 4px 20px var(--error-glow);
 }
 
+.feedback-card.warning {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+}
+
 .feedback-icon {
   font-size: 24px;
   padding-top: 2px;
@@ -515,6 +521,10 @@ select.input-control {
 
 .feedback-card.error .feedback-icon {
   color: var(--error);
+}
+
+.feedback-card.warning .feedback-icon {
+  color: var(--warning);
 }
 
 .feedback-title {
@@ -529,6 +539,10 @@ select.input-control {
 
 .feedback-card.error .feedback-title {
   color: var(--error);
+}
+
+.feedback-card.warning .feedback-title {
+  color: var(--warning);
 }
 
 .feedback-msg {

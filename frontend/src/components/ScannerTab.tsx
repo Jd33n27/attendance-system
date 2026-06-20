@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { client } from '../api/client';
 import type { User, ScanResponse } from '../api/client';
@@ -22,8 +22,42 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
   const [showManual, setShowManual] = useState(false);
   const [manualCode, setManualCode] = useState('');
 
+  const [isClockedIn, setIsClockedIn] = useState(false);
+  const [statusLoading, setStatusLoading] = useState(true);
+
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const scannerId = "qr-reader-viewport";
+
+  const getLagosDateStr = () => {
+    const d = new Date();
+    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    const lagosTime = new Date(utc + (3600000 * 1));
+    return lagosTime.toISOString().slice(0, 10);
+  };
+
+  const checkShiftStatus = useCallback(async () => {
+    setStatusLoading(true);
+    try {
+      const response = await client.getLogs(user.id);
+      const todayStr = getLagosDateStr();
+      const activeLog = response.logs?.find(log => log.date === todayStr && !log.clock_out);
+      if (activeLog) {
+        setIsClockedIn(true);
+        setAction('out');
+      } else {
+        setIsClockedIn(false);
+        setAction('in');
+      }
+    } catch (err) {
+      console.error("Failed to check shift status:", err);
+    } finally {
+      setStatusLoading(false);
+    }
+  }, [user.id]);
+
+  useEffect(() => {
+    checkShiftStatus();
+  }, [checkShiftStatus]);
 
   // Cleanup scanner on unmount
   useEffect(() => {
@@ -115,6 +149,15 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
         action: response.action
       });
       setManualCode('');
+
+      // Update local shift status state immediately
+      if (response.action === 'in') {
+        setIsClockedIn(true);
+        setAction('out');
+      } else {
+        setIsClockedIn(false);
+        setAction('in');
+      }
     } catch (err: any) {
       setResult({
         status: 'error',
@@ -167,6 +210,19 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
           <div className={`toggle-slider ${action}`} />
         </div>
 
+        {/* Active Shift warning notice */}
+        {action === 'in' && isClockedIn && (
+          <div className="feedback-card warning">
+            <div className="feedback-icon">!</div>
+            <div>
+              <div className="feedback-title">Currently Clocked In</div>
+              <div className="feedback-msg">
+                You have an active shift. Please switch to the <strong>Clock Out</strong> tab to complete your shift, or clock out using your scanner. You must clock out before you can clock in again.
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Feedback results */}
         {result.status === 'success' && (
           <div className="feedback-card success">
@@ -192,7 +248,16 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
         )}
 
         {/* Camera container */}
-        {cameraActive ? (
+        {action === 'in' && isClockedIn ? (
+          <div className="scanner-viewport" style={{ background: 'var(--input-bg)' }}>
+            <div className="scanner-placeholder">
+              <div style={{ fontWeight: 600, fontSize: '16px', color: 'var(--text-primary)' }}>Scanner Blocked</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                You are already clocked in. Please select "Clock Out" above.
+              </div>
+            </div>
+          </div>
+        ) : cameraActive ? (
           <div>
             <div className="scanner-viewport">
               <div id={scannerId} style={{ width: '100%', height: '100%' }}></div>
@@ -229,54 +294,56 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
               type="button" 
               className="btn-primary" 
               onClick={startScanner}
-              disabled={loading}
+              disabled={loading || statusLoading}
             >
-              Open QR Scanner
+              {statusLoading ? 'Checking Shift...' : 'Open QR Scanner'}
             </button>
           </div>
         )}
 
         {/* Manual code input fallback */}
-        <div className="manual-scan-box">
-          {!showManual ? (
-            <button 
-              type="button"
-              className="manual-scan-trigger"
-              onClick={() => setShowManual(true)}
-            >
-              Can't scan? Enter code manually
-            </button>
-          ) : (
-            <form onSubmit={handleManualSubmit} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <input
-                type="text"
-                className="input-control"
-                style={{ padding: '10px 12px', fontSize: '14px', flex: 1 }}
-                placeholder="Paste code (e.g. OALCDA_2026-06-20_abc)"
-                value={manualCode}
-                onChange={(e) => setManualCode(e.target.value)}
-                disabled={loading}
-              />
+        {!(action === 'in' && isClockedIn) && (
+          <div className="manual-scan-box">
+            {!showManual ? (
               <button 
-                type="submit" 
-                className="btn-primary" 
-                style={{ width: 'auto', padding: '10px 16px', fontSize: '14px' }}
-                disabled={loading || !manualCode.trim()}
-              >
-                Submit
-              </button>
-              <button
                 type="button"
-                className="btn-disconnect"
-                style={{ padding: '8px' }}
-                onClick={() => { setShowManual(false); setManualCode(''); }}
-                disabled={loading}
+                className="manual-scan-trigger"
+                onClick={() => setShowManual(true)}
               >
-                Cancel
+                Can't scan? Enter code manually
               </button>
-            </form>
-          )}
-        </div>
+            ) : (
+              <form onSubmit={handleManualSubmit} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  className="input-control"
+                  style={{ padding: '10px 12px', fontSize: '14px', flex: 1 }}
+                  placeholder="Paste code (e.g. OALCDA_2026-06-20_abc)"
+                  value={manualCode}
+                  onChange={(e) => setManualCode(e.target.value)}
+                  disabled={loading}
+                />
+                <button 
+                  type="submit" 
+                  className="btn-primary" 
+                  style={{ width: 'auto', padding: '10px 16px', fontSize: '14px' }}
+                  disabled={loading || !manualCode.trim()}
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="btn-disconnect"
+                  style={{ padding: '8px' }}
+                  onClick={() => { setShowManual(false); setManualCode(''); }}
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+              </form>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
