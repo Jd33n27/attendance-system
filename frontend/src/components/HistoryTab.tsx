@@ -59,7 +59,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
           className="manual-scan-trigger"
           style={{ textDecoration: 'none', border: '1px solid var(--panel-border)', padding: '6px 12px', borderRadius: '8px' }}
         >
-          {loading ? 'Refreshing...' : '🔄 Refresh'}
+          {loading ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
 
@@ -71,7 +71,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
           style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--panel-border)', background: 'var(--input-bg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => setShowBadge(!showBadge)}
         >
-          <span style={{ fontSize: '13px', fontWeight: 600 }}>📇 {showBadge ? 'Hide' : 'Show'} My Digital Worker Card</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{showBadge ? 'Hide' : 'Show'} My Digital Worker Card</span>
           <span style={{ fontSize: '12px' }}>{showBadge ? '▲' : '▼'}</span>
         </button>
 
@@ -135,7 +135,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
 
       {error && (
         <div className="feedback-card error" style={{ marginBottom: '20px' }}>
-          <div className="feedback-icon">⚠️</div>
+          <div className="feedback-icon">!</div>
           <div>
             <div className="feedback-title">Sync Error</div>
             <div className="feedback-msg">{error}</div>
@@ -151,7 +151,6 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
         </div>
       ) : logs.length === 0 ? (
         <div className="log-empty">
-          <span style={{ fontSize: '32px', display: 'block', marginBottom: '8px' }}>📂</span>
           No attendance logs recorded yet.
         </div>
       ) : (
@@ -179,7 +178,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
               <div style={{ textAlign: 'right' }}>
                 {log.clock_out ? (
                   <span className="log-duration">
-                    ⏱️ {log.duration_hours?.toFixed(2) || '0.00'} hrs
+                    {log.duration_hours?.toFixed(2) || '0.00'} hrs
                   </span>
                 ) : (
                   <span className="status-pill in" style={{ fontSize: '10px' }}>

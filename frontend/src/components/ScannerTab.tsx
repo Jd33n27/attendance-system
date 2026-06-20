@@ -136,8 +136,8 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
       {/* User display widget */}
       <div className="user-widget">
         <div className="user-widget-info">
-          <div className="user-widget-name">👤 {user.name}</div>
-          <div className="user-widget-dept">🏢 {user.department}</div>
+          <div className="user-widget-name">Name: {user.name}</div>
+          <div className="user-widget-dept">Dept: {user.department}</div>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <span className="status-pill out" style={{ fontSize: '10px' }}>Connected</span>
@@ -156,13 +156,13 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
             className={`toggle-option ${action === 'in' ? 'active' : ''}`}
             onClick={() => { if (!loading) setAction('in'); }}
           >
-            📥 Clock In
+            Clock In
           </div>
           <div 
             className={`toggle-option ${action === 'out' ? 'active' : ''}`}
             onClick={() => { if (!loading) setAction('out'); }}
           >
-            📤 Clock Out
+            Clock Out
           </div>
           <div className={`toggle-slider ${action}`} />
         </div>
@@ -170,7 +170,7 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
         {/* Feedback results */}
         {result.status === 'success' && (
           <div className="feedback-card success">
-            <div className="feedback-icon">✅</div>
+            <div className="feedback-icon">✓</div>
             <div>
               <div className="feedback-title">Success - Clocked {result.action === 'in' ? 'In' : 'Out'}</div>
               <div className="feedback-msg">{result.message}</div>
@@ -183,7 +183,7 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
 
         {result.status === 'error' && (
           <div className="feedback-card error">
-            <div className="feedback-icon">❌</div>
+            <div className="feedback-icon">!</div>
             <div>
               <div className="feedback-title">Scan Rejected</div>
               <div className="feedback-msg">{result.message}</div>
@@ -210,14 +210,14 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
               onClick={stopScanner}
               disabled={loading}
             >
-              🛑 Cancel Camera
+              Cancel Camera
             </button>
           </div>
         ) : (
           <div>
             <div className="scanner-viewport" style={{ background: 'var(--input-bg)' }}>
               <div className="scanner-placeholder">
-                <div className="scanner-placeholder-icon">📷</div>
+                <div className="scanner-placeholder-icon">CAM</div>
                 <div style={{ fontWeight: 500, fontSize: '15px' }}>Camera Inactive</div>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                   Tap below to open webcam and scan QR
@@ -231,7 +231,7 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
               onClick={startScanner}
               disabled={loading}
             >
-              🔍 Open QR Scanner
+              Open QR Scanner
             </button>
           </div>
         )}

@@ -127,7 +127,7 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
 
       {unrecognizedKey && (
         <div className="feedback-card error" style={{ marginBottom: '20px', background: 'var(--warning-bg)', borderColor: 'var(--warning-border)', color: 'var(--warning)' }}>
-          <div className="feedback-icon">⚠️</div>
+          <div className="feedback-icon">!</div>
           <div>
             <div className="feedback-title" style={{ color: 'var(--text-primary)' }}>Unregistered Worker Card</div>
             <div className="feedback-msg" style={{ fontSize: '13px' }}>
@@ -139,7 +139,7 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
 
       {error && (
         <div className="feedback-card error" style={{ marginBottom: '20px' }}>
-          <div className="feedback-icon">⚠️</div>
+          <div className="feedback-icon">!</div>
           <div>
             <div className="feedback-title">Registration Failed</div>
             <div className="feedback-msg">{error}</div>
@@ -215,7 +215,7 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
 
 
         <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '8px' }}>
-          {loading ? 'Registering...' : '📝 Register & Connect'}
+          {loading ? 'Registering...' : 'Register & Connect'}
         </button>
       </form>
     </div>

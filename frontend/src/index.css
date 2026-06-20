@@ -403,6 +403,15 @@ select.input-control {
   margin-bottom: 20px;
 }
 
+/* Hide html5-qrcode's default white scanner box border */
+#qr-reader-viewport div[style*="border"] {
+  border: none !important;
+}
+#qr-reader-viewport canvas {
+  border: none !important;
+}
+
+
 .scanner-overlay {
   position: absolute;
   top: 0;

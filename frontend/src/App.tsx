@@ -80,7 +80,6 @@ function App() {
               className={`nav-button ${activeTab === 'scanner' ? 'active' : ''}`}
               onClick={() => setActiveTab('scanner')}
             >
-              <span className="nav-icon">📷</span>
               <span>Scanner</span>
             </button>
             <button 
@@ -88,7 +87,6 @@ function App() {
               className={`nav-button ${activeTab === 'history' ? 'active' : ''}`}
               onClick={() => setActiveTab('history')}
             >
-              <span className="nav-icon">📊</span>
               <span>Logs</span>
             </button>
           </>
@@ -102,7 +100,6 @@ function App() {
                 setActiveTab('login');
               }}
             >
-              <span className="nav-icon">📇</span>
               <span>Login</span>
             </button>
             <button 
@@ -110,7 +107,6 @@ function App() {
               className={`nav-button ${activeTab === 'register' ? 'active' : ''}`}
               onClick={() => setActiveTab('register')}
             >
-              <span className="nav-icon">📝</span>
               <span>Register</span>
             </button>
             <button 
@@ -118,7 +114,6 @@ function App() {
               className={`nav-button ${activeTab === 'admin' ? 'active' : ''}`}
               onClick={() => setActiveTab('admin')}
             >
-              <span className="nav-icon">🔑</span>
               <span>Admin</span>
             </button>
           </>
@@ -164,7 +159,6 @@ function App() {
         {/* Catch-all warning if user gets into tab without registering */}
         {activeTab !== 'admin' && !user && activeTab !== 'register' && activeTab !== 'login' && (
           <div className="panel" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '48px', display: 'block', marginBottom: '16px' }}>⚠️</span>
             <h2 style={{ marginBottom: '8px' }}>Profile Required</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
               You must register or log in to a worker profile before you can access the scanner or shift logs.

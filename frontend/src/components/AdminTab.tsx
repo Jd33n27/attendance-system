@@ -292,7 +292,7 @@ export const AdminTab: React.FC = () => {
 
           {error && (
             <div className="feedback-card error" style={{ marginBottom: '20px' }}>
-              <div className="feedback-icon">⚠️</div>
+              <div className="feedback-icon">!</div>
               <div>
                 <div className="feedback-title">Authorization Failed</div>
                 <div className="feedback-msg">{error}</div>
@@ -333,7 +333,7 @@ export const AdminTab: React.FC = () => {
               </div>
             </div>
             <button type="submit" className="btn-primary" disabled={authLoading}>
-              {authLoading ? 'Verifying...' : '🔒 Authorise Session'}
+              {authLoading ? 'Verifying...' : 'Authorise Session'}
             </button>
           </form>
         </div>
@@ -342,7 +342,7 @@ export const AdminTab: React.FC = () => {
           {/* Header Widget */}
           <div className="user-widget">
             <div className="user-widget-info">
-              <div className="user-widget-name">🔑 Administrator Mode</div>
+              <div className="user-widget-name">Administrator Mode</div>
               <div className="user-widget-dept">Connected session</div>
             </div>
             <button type="button" className="btn-disconnect" onClick={handleDisconnect}>
@@ -357,21 +357,21 @@ export const AdminTab: React.FC = () => {
               style={{ fontSize: '13px', padding: '10px 4px' }}
               onClick={() => setSubTab('qr_gen')}
             >
-              ⚡ QR Code
+              QR Code
             </div>
             <div 
               className={`toggle-option ${subTab === 'reports' ? 'active' : ''}`}
               style={{ fontSize: '13px', padding: '10px 4px' }}
               onClick={() => setSubTab('reports')}
             >
-              📊 Shift Logs
+              Shift Logs
             </div>
             <div 
               className={`toggle-option ${subTab === 'directory' ? 'active' : ''}`}
               style={{ fontSize: '13px', padding: '10px 4px' }}
               onClick={() => setSubTab('directory')}
             >
-              👥 Staff List
+              Staff List
             </div>
             {/* Custom slider position */}
             <div 
@@ -387,7 +387,7 @@ export const AdminTab: React.FC = () => {
 
           {error && (
             <div className="feedback-card error" style={{ marginBottom: '20px' }}>
-              <div className="feedback-icon">⚠️</div>
+              <div className="feedback-icon">!</div>
               <div>
                 <div className="feedback-title">System Error</div>
                 <div className="feedback-msg">{error}</div>
@@ -405,7 +405,7 @@ export const AdminTab: React.FC = () => {
 
               {qrSuccessMsg && (
                 <div className="feedback-card success" style={{ marginBottom: '20px' }}>
-                  <div className="feedback-icon">✨</div>
+                  <div className="feedback-icon">✓</div>
                   <div>
                     <div className="feedback-title">QR Code Generated</div>
                     <div className="feedback-msg">{qrSuccessMsg}</div>
@@ -420,7 +420,7 @@ export const AdminTab: React.FC = () => {
                 disabled={genLoading}
                 style={{ marginBottom: '24px' }}
               >
-                {genLoading ? 'Publishing...' : '⚡ Generate Today\'s QR Code'}
+                {genLoading ? 'Publishing...' : 'Generate Today\'s QR Code'}
               </button>
 
               <div style={{ borderTop: '1px solid var(--panel-border)', paddingTop: '20px' }}>
@@ -443,7 +443,7 @@ export const AdminTab: React.FC = () => {
                       style={{ background: 'var(--accent)', boxShadow: '0 4px 12px var(--accent-glow)' }}
                       onClick={handlePrint}
                     >
-                      🖨️ Display / Print Poster
+                      Display / Print Poster
                     </button>
                   </div>
                 ) : (
@@ -500,7 +500,7 @@ export const AdminTab: React.FC = () => {
                     onClick={fetchReports}
                     disabled={logsLoading}
                   >
-                    🔍 Apply Filters
+                    Apply Filters
                   </button>
                   <button 
                     type="button"
@@ -527,7 +527,7 @@ export const AdminTab: React.FC = () => {
                     style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', color: 'var(--success)', padding: '6px 12px', borderRadius: '8px' }}
                     onClick={handleExportCSV}
                   >
-                    📊 Export CSV
+                    Export CSV
                   </button>
                 )}
               </div>
@@ -551,7 +551,7 @@ export const AdminTab: React.FC = () => {
                           <strong style={{ color: 'var(--text-primary)', fontSize: '15px' }}>{log.user_name}</strong>
                           <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{log.department}</div>
                         </div>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>📅 {log.date}</span>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{log.date}</span>
                       </div>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed var(--panel-border)', paddingTop: '8px', marginTop: '4px' }}>
@@ -572,7 +572,7 @@ export const AdminTab: React.FC = () => {
 
                         {log.clock_out ? (
                           <span className="log-duration" style={{ fontSize: '13px' }}>
-                            ⏱️ {log.duration_hours?.toFixed(2)} hrs
+                            {log.duration_hours?.toFixed(2)} hrs
                           </span>
                         ) : (
                           <span className="status-pill in" style={{ fontSize: '9px' }}>Scanning Shift</span>
@@ -622,7 +622,7 @@ export const AdminTab: React.FC = () => {
 
                       <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                         <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 600 }}>
-                          📊 {u.total_attendance} shifts
+                          {u.total_attendance} shifts
                         </span>
                         
                         <button
