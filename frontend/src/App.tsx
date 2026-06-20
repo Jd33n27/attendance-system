@@ -31,6 +31,7 @@ function App() {
 
   const handleLoginSuccess = (loggedInUser: User) => {
     localStorage.setItem('oalcda_active_user', JSON.stringify(loggedInUser));
+    localStorage.removeItem('oalcda_admin_token'); // Clear admin token to isolate sessions
     setUser(loggedInUser);
     setUnrecognizedKey(null);
     setActiveTab('scanner');
@@ -43,6 +44,7 @@ function App() {
 
   const handleRegisterSuccess = (newUser: User) => {
     localStorage.setItem('oalcda_active_user', JSON.stringify(newUser));
+    localStorage.removeItem('oalcda_admin_token'); // Clear admin token to isolate sessions
     setUser(newUser);
     setUnrecognizedKey(null);
     setActiveTab('scanner'); // switch directly to scanner on registration
@@ -51,6 +53,7 @@ function App() {
   const handleDisconnect = () => {
     if (confirm("Are you sure you want to disconnect? This will log you out from this device.")) {
       localStorage.removeItem('oalcda_active_user');
+      localStorage.removeItem('oalcda_admin_token'); // Clear everything on disconnect
       setUser(null);
       setUnrecognizedKey(null);
       setActiveTab('login');
@@ -110,16 +113,16 @@ function App() {
               <span className="nav-icon">📝</span>
               <span>Register</span>
             </button>
+            <button 
+              type="button" 
+              className={`nav-button ${activeTab === 'admin' ? 'active' : ''}`}
+              onClick={() => setActiveTab('admin')}
+            >
+              <span className="nav-icon">🔑</span>
+              <span>Admin</span>
+            </button>
           </>
         )}
-        <button 
-          type="button" 
-          className={`nav-button ${activeTab === 'admin' ? 'active' : ''}`}
-          onClick={() => setActiveTab('admin')}
-        >
-          <span className="nav-icon">🔑</span>
-          <span>Admin</span>
-        </button>
       </nav>
 
       {/* Profile disconnect banner (only when registered and not on admin view) */}
@@ -154,7 +157,7 @@ function App() {
           <HistoryTab user={user} />
         )}
 
-        {activeTab === 'admin' && (
+        {activeTab === 'admin' && !user && (
           <AdminTab />
         )}
 
