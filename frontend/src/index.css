@@ -668,7 +668,7 @@ select.input-control {
   font-family: var(--font-sans);
   font-size: 12px;
   background: var(--code-bg);
-  color: var(--text-primary);
+  color: #000000;
   padding: 6px 12px;
   border-radius: 8px;
   word-break: break-all;

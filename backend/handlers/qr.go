@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"crypto/sha256"
+	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
 	"encoding/hex"
@@ -68,12 +68,16 @@ func GenerateDailyQR(w http.ResponseWriter, r *http.Request) {
 	}
 	dateStr := today.Format("2006-01-02")
 
-	// Generate hash: SHA256(dateStr + secret)
-	hasher := sha256.New()
-	hasher.Write([]byte(dateStr + qrSecret))
-	hashStr := hex.EncodeToString(hasher.Sum(nil))[:16] // use first 16 chars for cleaner string
+	// Generate cryptographically secure random 16 bytes (32 hex chars) equivalent to: openssl rand -hex 16
+	randomBytes := make([]byte, 16)
+	_, err = rand.Read(randomBytes)
+	if err != nil {
+		RespondWithError(w, http.StatusInternalServerError, "Failed to generate random bytes: "+err.Error())
+		return
+	}
+	randomHex := hex.EncodeToString(randomBytes)
 
-	qrCodeString := "OALCDA_" + dateStr + "_" + hashStr
+	qrCodeString := "OALCDA_" + dateStr + "_" + randomHex
 
 	// Generate QR Code PNG bytes
 	pngBytes, err := qrcode.Encode(qrCodeString, qrcode.Medium, 256)
