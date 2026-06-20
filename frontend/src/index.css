@@ -3,27 +3,27 @@
 :root {
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   
-  /* Color Palette - Default Dark Mode (Premium Night) */
-  --bg-gradient: linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #090714 100%);
-  --panel-bg: rgba(26, 21, 48, 0.45);
-  --panel-border: rgba(168, 85, 247, 0.15);
-  --panel-glow: rgba(168, 85, 247, 0.05);
+  /* Color Palette - User Custom iOS Space Palette */
+  --bg-gradient: linear-gradient(135deg, #000000 0%, #0c1222 50%, #000000 100%);
+  --panel-bg: rgba(15, 23, 42, 0.55);
+  --panel-border: rgba(0, 122, 255, 0.15);
+  --panel-glow: rgba(0, 122, 255, 0.05);
   
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   
-  --primary: #a855f7;
-  --primary-hover: #c084fc;
-  --primary-glow: rgba(168, 85, 247, 0.4);
+  --primary: #007aff;
+  --primary-hover: #3b82f6;
+  --primary-glow: rgba(0, 122, 255, 0.4);
   
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.4);
+  --accent: #0d9488;
+  --accent-glow: rgba(13, 148, 136, 0.4);
   
-  --success: #10b981;
-  --success-bg: rgba(16, 185, 129, 0.1);
-  --success-border: rgba(16, 185, 129, 0.3);
-  --success-glow: rgba(16, 185, 129, 0.25);
+  --success: #0d9488;
+  --success-bg: rgba(13, 148, 136, 0.1);
+  --success-border: rgba(13, 148, 136, 0.3);
+  --success-glow: rgba(13, 148, 136, 0.25);
   
   --error: #ef4444;
   --error-bg: rgba(239, 68, 68, 0.10);
@@ -34,12 +34,12 @@
   --warning-bg: rgba(245, 158, 11, 0.1);
   --warning-border: rgba(245, 158, 11, 0.3);
   
-  --input-bg: rgba(15, 12, 32, 0.6);
-  --input-border: rgba(168, 85, 247, 0.15);
-  --input-focus: rgba(168, 85, 247, 0.5);
+  --input-bg: rgba(15, 23, 42, 0.65);
+  --input-border: rgba(0, 122, 255, 0.15);
+  --input-focus: rgba(0, 122, 255, 0.5);
 
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.6);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.8);
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -49,35 +49,35 @@
 /* Light Mode Override */
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #faf5ff 100%);
-    --panel-bg: rgba(255, 255, 255, 0.7);
-    --panel-border: rgba(168, 85, 247, 0.2);
-    --panel-glow: rgba(168, 85, 247, 0.02);
+    --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+    --panel-bg: rgba(255, 255, 255, 0.75);
+    --panel-border: rgba(0, 122, 255, 0.2);
+    --panel-glow: rgba(0, 122, 255, 0.02);
     
-    --text-primary: #1e1b4b;
-    --text-secondary: #4b5563;
-    --text-muted: #9ca3af;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
     
-    --primary: #9333ea;
-    --primary-hover: #7e22ce;
-    --primary-glow: rgba(147, 51, 234, 0.2);
+    --primary: #007aff;
+    --primary-hover: #1d4ed8;
+    --primary-glow: rgba(0, 122, 255, 0.2);
     
-    --accent: #4f46e5;
-    --accent-glow: rgba(79, 70, 229, 0.2);
+    --accent: #0f766e;
+    --accent-glow: rgba(15, 118, 110, 0.2);
     
-    --success: #059669;
-    --success-bg: rgba(5, 150, 105, 0.08);
-    --success-border: rgba(5, 150, 105, 0.25);
+    --success: #0f766e;
+    --success-bg: rgba(15, 118, 110, 0.08);
+    --success-border: rgba(15, 118, 110, 0.25);
     
     --error: #dc2626;
     --error-bg: rgba(220, 38, 38, 0.06);
     --error-border: rgba(220, 38, 38, 0.25);
     
-    --input-bg: rgba(255, 255, 255, 0.9);
-    --input-border: rgba(168, 85, 247, 0.25);
-    --input-focus: rgba(147, 51, 234, 0.4);
+    --input-bg: rgba(255, 255, 255, 0.95);
+    --input-border: rgba(0, 122, 255, 0.2);
+    --input-focus: rgba(0, 122, 255, 0.4);
     
-    --shadow-lg: 0 20px 25px -5px rgba(147, 51, 234, 0.1), 0 10px 10px -5px rgba(147, 51, 234, 0.04);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 122, 255, 0.08), 0 10px 10px -5px rgba(0, 122, 255, 0.03);
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
   }
 }
@@ -174,7 +174,7 @@ nav {
   padding: 10px 4px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -184,6 +184,10 @@ nav {
 
 .nav-button:hover {
   color: var(--text-primary);
+}
+
+.nav-button:active {
+  transform: scale(0.94);
 }
 
 .nav-button.active {
@@ -209,6 +213,7 @@ nav {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  animation: iosSpring 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .panel::before {
@@ -242,12 +247,16 @@ nav {
   color: var(--text-secondary);
   cursor: pointer;
   z-index: 2;
-  transition: color 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.toggle-option:active {
+  transform: scale(0.96);
 }
 
 .toggle-option.active {
@@ -262,11 +271,11 @@ nav {
   width: calc(50% - 4px);
   border-radius: 10px;
   z-index: 1;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .toggle-slider.in {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   box-shadow: 0 4px 12px var(--success-glow);
   transform: translateX(0);
 }
@@ -365,7 +374,7 @@ select.input-control {
   padding: 14px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 4px 12px var(--primary-glow);
   display: flex;
   align-items: center;
@@ -374,12 +383,12 @@ select.input-control {
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.01);
   box-shadow: 0 6px 16px var(--primary-glow);
 }
 
 .btn-primary:active {
-  transform: translateY(1px);
+  transform: scale(0.96);
 }
 
 .btn-primary:disabled {
@@ -765,4 +774,15 @@ select.input-control {
 .skeleton-btn {
   height: 48px;
   border-radius: 12px;
+}
+
+@keyframes iosSpring {
+  0% {
+    transform: translateY(24px) scale(0.96);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
