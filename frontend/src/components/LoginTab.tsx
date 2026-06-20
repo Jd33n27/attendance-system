@@ -60,7 +60,7 @@ export const LoginTab: React.FC<LoginTabProps> = ({ onLoginSuccess }) => {
 
       {error && (
         <div className="feedback-card error" style={{ marginBottom: '20px' }}>
-          <div className="feedback-icon">⚠️</div>
+          <div className="feedback-icon">!</div>
           <div>
             <div className="feedback-title">Access Denied</div>
             <div className="feedback-msg">{error}</div>
@@ -134,7 +134,7 @@ export const LoginTab: React.FC<LoginTabProps> = ({ onLoginSuccess }) => {
         </div>
 
         <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '8px' }}>
-          {loading ? 'Authenticating...' : '🔑 Log In to Portal'}
+          {loading ? 'Authenticating...' : 'Log In to Portal'}
         </button>
       </form>
     </div>
