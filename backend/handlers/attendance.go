@@ -139,7 +139,32 @@ func ClockInOut(w http.ResponseWriter, r *http.Request) {
 		err = db.DB.QueryRow(checkQuery, req.UserID, todayStr).Scan(&clockInExists, &clockOutIsSet)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				RespondWithError(w, http.StatusBadRequest, "Cannot clock out: you must clock in first")
+				// Auto-Correction Logic:
+				// If a worker selected "Clock Out" but has no shift log today (meaning they never clocked in today,
+				// or forgot to clock out yesterday and assumed they were still active),
+				// automatically clock them in for today instead of throwing an error.
+				insertQuery := `
+					INSERT INTO attendance_logs (user_id, clock_in, date)
+					VALUES ($1, $2, $3)
+					RETURNING clock_in
+				`
+				var clockInTime time.Time
+				err = db.DB.QueryRow(insertQuery, req.UserID, now, todayStr).Scan(&clockInTime)
+				if err != nil {
+					if strings.Contains(err.Error(), "unique constraint") || strings.Contains(err.Error(), "duplicate key") {
+						RespondWithError(w, http.StatusBadRequest, "You have already clocked in for today ("+todayStr+")")
+						return
+					}
+					RespondWithError(w, http.StatusInternalServerError, "Failed to auto-record clock-in: "+err.Error())
+					return
+				}
+
+				RespondWithJSON(w, http.StatusOK, ScanResponse{
+					Status:    "success",
+					Message:   "Clocked in successfully at " + clockInTime.In(loc).Format("15:04:05") + " (Auto-corrected)",
+					ClockTime: clockInTime,
+					Action:    "in",
+				})
 				return
 			}
 			RespondWithError(w, http.StatusInternalServerError, "Database error: "+err.Error())
