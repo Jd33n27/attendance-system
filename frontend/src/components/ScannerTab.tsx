@@ -120,6 +120,15 @@ export const ScannerTab: React.FC<ScannerTabProps> = ({ user }) => {
   };
 
   const handleScanSubmission = async (qrString: string) => {
+    if (action === 'out' && !isClockedIn) {
+      const confirmClockOut = window.confirm(
+        "Warning: You are currently not clocked in for today. Are you sure you want to clock out?"
+      );
+      if (!confirmClockOut) {
+        return;
+      }
+    }
+
     // Vibrate to simulate scanner feedback if API exists
     if (navigator.vibrate) {
       navigator.vibrate(150);
