@@ -3,50 +3,50 @@
 :root {
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* Material 3 Dynamic Colors (Light Theme by Default) */
-  --md-sys-color-primary: #0061a4;
+  /* Spring Physics / M3 Expressive Motion curves */
+  --md-spring-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --md-spring-bouncy: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --md-transition-duration: 0.3s;
+
+  /* Default Theme: Lagos Lagoon (Teal Seed #006a6a) */
+  --md-sys-color-primary: #006a6a;
   --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #d1e4ff;
-  --md-sys-color-on-primary-container: #001d36;
+  --md-sys-color-primary-container: #6ff7f6;
+  --md-sys-color-on-primary-container: #002020;
   
-  --md-sys-color-secondary: #535f70;
+  --md-sys-color-secondary: #4a6363;
   --md-sys-color-on-secondary: #ffffff;
-  --md-sys-color-secondary-container: #d7e3f7;
-  --md-sys-color-on-secondary-container: #101c2b;
+  --md-sys-color-secondary-container: #cce8e7;
+  --md-sys-color-on-secondary-container: #051f20;
   
-  --md-sys-color-tertiary: #6b5778;
+  --md-sys-color-tertiary: #4b607a;
   --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #f2daff;
-  --md-sys-color-on-tertiary-container: #251431;
+  --md-sys-color-tertiary-container: #d3e4ff;
+  --md-sys-color-on-tertiary-container: #051c33;
 
   --md-sys-color-error: #ba1a1a;
   --md-sys-color-on-error: #ffffff;
   --md-sys-color-error-container: #ffdad6;
   --md-sys-color-on-error-container: #410002;
 
-  --md-sys-color-background: #fdfcff;
-  --md-sys-color-on-background: #1a1c1e;
+  --md-sys-color-background: #f8fbfb;
+  --md-sys-color-on-background: #161d1d;
   
-  --md-sys-color-surface: #fdfcff;
-  --md-sys-color-on-surface: #1a1c1e;
-  --md-sys-color-surface-variant: #dfe2eb;
-  --md-sys-color-on-surface-variant: #43474e;
+  --md-sys-color-surface: #f8fbfb;
+  --md-sys-color-on-surface: #161d1d;
+  --md-sys-color-surface-variant: #dae5e4;
+  --md-sys-color-on-surface-variant: #3f4948;
   
-  --md-sys-color-outline: #73777f;
-  --md-sys-color-outline-variant: #c3c7d0;
+  --md-sys-color-outline: #6f7979;
+  --md-sys-color-outline-variant: #bec9c8;
 
   --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #f7f9ff;
-  --md-sys-color-surface-container: #f1f4f9;
-  --md-sys-color-surface-container-high: #ebeef3;
-  --md-sys-color-surface-container-highest: #e5e8ee;
+  --md-sys-color-surface-container-low: #f0f7f7;
+  --md-sys-color-surface-container: #eaf1f1;
+  --md-sys-color-surface-container-high: #e4ebeb;
+  --md-sys-color-surface-container-highest: #dee5e5;
 
-  /* Elevation Shadows */
-  --elevation-0: none;
-  --elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
-  --elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
-  --elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.08), 0px 1px 3px 0px rgba(0, 0, 0, 0.15);
-
+  /* Radius Scales */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -54,94 +54,296 @@
   --radius-xl: 28px;
   --radius-full: 9999px;
 
-  /* Legacy Variable Mapping to ensure compatibility */
+  /* Tonal Elevations (Material 3: Tint Overlays instead of harsh shadows) */
+  --elevation-0: none;
+  --elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.08);
+  --elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.08);
+  --elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.04), 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+
+  /* Legacy Variable Mappings */
   --bg-gradient: var(--md-sys-color-background);
   --panel-bg: var(--md-sys-color-surface-container-low);
   --panel-border: var(--md-sys-color-outline-variant);
-  
   --text-primary: var(--md-sys-color-on-surface);
   --text-secondary: var(--md-sys-color-on-surface-variant);
-  --text-muted: #8d9199;
-  
+  --text-muted: #6f7979;
   --primary: var(--md-sys-color-primary);
-  --primary-hover: #004d80;
-  --primary-glow: rgba(0, 97, 164, 0.06);
-  
+  --primary-hover: var(--md-sys-color-primary);
+  --primary-glow: transparent;
   --accent: var(--md-sys-color-secondary);
-  
-  --success: #0b806f;
-  --success-bg: var(--md-sys-color-primary-container);
-  --success-border: var(--md-sys-color-outline-variant);
-  --success-glow: rgba(11, 128, 111, 0.1);
-  
+  --success: #006a60;
+  --success-bg: #d0f0eb;
+  --success-border: #a2ded5;
   --error: var(--md-sys-color-error);
   --error-bg: var(--md-sys-color-error-container);
   --error-border: var(--md-sys-color-outline-variant);
-  --error-glow: rgba(186, 26, 26, 0.1);
-  
-  --warning: #a05d00;
-  --warning-bg: var(--md-sys-color-tertiary-container);
-  --warning-border: var(--md-sys-color-outline-variant);
-  
+  --warning: #7c5800;
+  --warning-bg: #ffe0db;
+  --warning-border: #f8bebe;
   --input-bg: var(--md-sys-color-surface-container-lowest);
   --input-border: var(--md-sys-color-outline);
   --input-focus: var(--md-sys-color-primary);
-
-  --shadow-lg: var(--elevation-2);
-  --shadow-inner: inset 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Material 3 Dark Theme */
+/* --- MATERIAL 3 DYNAMIC COLOR PALETTES --- */
+
+/* Theme 1: Lagos Lagoon (Teal - Default) */
+body.theme-lagos-lagoon {
+  /* Dynamic values initialized by default above */
+}
+
+/* Theme 2: Yoruba Indigo (Blue Seed #005faf) */
+body.theme-yoruba-indigo {
+  --md-sys-color-primary: #005faf;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d4e3ff;
+  --md-sys-color-on-primary-container: #001c3a;
+  
+  --md-sys-color-secondary: #535f71;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d7e3f8;
+  --md-sys-color-on-secondary-container: #101c2b;
+  
+  --md-sys-color-tertiary: #745470;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #ffd7f6;
+  --md-sys-color-on-tertiary-container: #2c122a;
+  
+  --md-sys-color-background: #fdfcff;
+  --md-sys-color-on-background: #1a1c1e;
+  --md-sys-color-surface: #fdfcff;
+  --md-sys-color-on-surface: #1a1c1e;
+  --md-sys-color-surface-variant: #e0e2ec;
+  --md-sys-color-on-surface-variant: #43474e;
+  --md-sys-color-outline: #73777f;
+  --md-sys-color-outline-variant: #c3c7d0;
+  
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f3f4fa;
+  --md-sys-color-surface-container: #edf0f5;
+  --md-sys-color-surface-container-high: #e7eaf0;
+  --md-sys-color-surface-container-highest: #e1e4ea;
+  
+  --success: #005faf;
+}
+
+/* Theme 3: Golden Sun (Amber Seed #775a00) */
+body.theme-golden-sun {
+  --md-sys-color-primary: #775a00;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdf94;
+  --md-sys-color-on-primary-container: #251a00;
+  
+  --md-sys-color-secondary: #685e40;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #f0e2be;
+  --md-sys-color-on-secondary-container: #221b05;
+  
+  --md-sys-color-tertiary: #46664b;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #c7eccb;
+  --md-sys-color-on-tertiary-container: #02210c;
+  
+  --md-sys-color-background: #fffbfa;
+  --md-sys-color-on-background: #1e1b13;
+  --md-sys-color-surface: #fffbfa;
+  --md-sys-color-on-surface: #1e1b13;
+  --md-sys-color-surface-variant: #ece2cf;
+  --md-sys-color-on-surface-variant: #4d4639;
+  --md-sys-color-outline: #7e7667;
+  --md-sys-color-outline-variant: #d0c5b4;
+  
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f9f4ea;
+  --md-sys-color-surface-container: #f3eee4;
+  --md-sys-color-surface-container-high: #ede8de;
+  --md-sys-color-surface-container-highest: #e7e2d8;
+  
+  --success: #3c6946;
+}
+
+/* Theme 4: Terracotta Earth (Red Seed #ba1a1a) */
+body.theme-terracotta {
+  --md-sys-color-primary: #ba1a1a;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdad6;
+  --md-sys-color-on-primary-container: #410002;
+  
+  --md-sys-color-secondary: #775652;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #ffdad5;
+  --md-sys-color-on-secondary-container: #2c1512;
+  
+  --md-sys-color-tertiary: #715b29;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #fddf9e;
+  --md-sys-color-on-tertiary-container: #261a00;
+  
+  --md-sys-color-background: #fffbff;
+  --md-sys-color-on-background: #201a19;
+  --md-sys-color-surface: #fffbff;
+  --md-sys-color-on-surface: #201a19;
+  --md-sys-color-surface-variant: #f5ddd8;
+  --md-sys-color-on-surface-variant: #534341;
+  --md-sys-color-outline: #857370;
+  --md-sys-color-outline-variant: #d8c2be;
+  
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #fbeeeb;
+  --md-sys-color-surface-container: #f6e3e0;
+  --md-sys-color-surface-container-high: #f0ddd9;
+  --md-sys-color-surface-container-highest: #ead7d3;
+  
+  --success: #b02d1a;
+}
+
+/* --- MATERIAL 3 DARK THEME OVERLAYS --- */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --md-sys-color-primary: #9ecaff;
-    --md-sys-color-on-primary: #003258;
-    --md-sys-color-primary-container: #00497b;
-    --md-sys-color-on-primary-container: #d1e4ff;
-
+  :root, body.theme-lagos-lagoon {
+    --md-sys-color-primary: #4fe0e0;
+    --md-sys-color-on-primary: #003737;
+    --md-sys-color-primary-container: #005050;
+    --md-sys-color-on-primary-container: #6ff7f6;
+    
+    --md-sys-color-secondary: #b0cccc;
+    --md-sys-color-on-secondary: #1c3535;
+    --md-sys-color-secondary-container: #324b4c;
+    --md-sys-color-on-secondary-container: #cce8e7;
+    
+    --md-sys-color-tertiary: #b3c8e8;
+    --md-sys-color-on-tertiary: #1b324a;
+    --md-sys-color-tertiary-container: #334961;
+    --md-sys-color-on-tertiary-container: #d3e4ff;
+    
+    --md-sys-color-background: #0e1414;
+    --md-sys-color-on-background: #deecec;
+    --md-sys-color-surface: #0e1414;
+    --md-sys-color-on-surface: #deecec;
+    --md-sys-color-surface-variant: #3f4948;
+    --md-sys-color-on-surface-variant: #bec9c8;
+    --md-sys-color-outline: #899392;
+    --md-sys-color-outline-variant: #3f4948;
+    
+    --md-sys-color-surface-container-lowest: #090f0f;
+    --md-sys-color-surface-container-low: #161d1d;
+    --md-sys-color-surface-container: #1b2121;
+    --md-sys-color-surface-container-high: #252c2c;
+    --md-sys-color-surface-container-highest: #303737;
+    
+    --success: #32caa4;
+    --success-bg: rgba(50, 202, 164, 0.1);
+  }
+  
+  body.theme-yoruba-indigo {
+    --md-sys-color-primary: #a4c8ff;
+    --md-sys-color-on-primary: #003161;
+    --md-sys-color-primary-container: #004787;
+    --md-sys-color-on-primary-container: #d4e3ff;
+    
     --md-sys-color-secondary: #bbc7db;
-    --md-sys-color-on-secondary: #253140;
-    --md-sys-color-secondary-container: #3b4858;
-    --md-sys-color-on-secondary-container: #d7e3f7;
-
-    --md-sys-color-tertiary: #d7bee4;
-    --md-sys-color-on-tertiary: #3b2948;
-    --md-sys-color-tertiary-container: #52405f;
-    --md-sys-color-on-tertiary-container: #f2daff;
-
-    --md-sys-color-error: #ffb4ab;
-    --md-sys-color-on-error: #690005;
-    --md-sys-color-error-container: #93000a;
-    --md-sys-color-on-error-container: #ffdad6;
-
-    --md-sys-color-background: #0f1318;
-    --md-sys-color-on-background: #e2e2e9;
-
-    --md-sys-color-surface: #0f1318;
-    --md-sys-color-on-surface: #e2e2e9;
+    --md-sys-color-on-secondary: #253141;
+    --md-sys-color-secondary-container: #3b4859;
+    --md-sys-color-on-secondary-container: #d7e3f8;
+    
+    --md-sys-color-tertiary: #e2bbdd;
+    --md-sys-color-on-tertiary: #42273e;
+    --md-sys-color-tertiary-container: #5b3d56;
+    --md-sys-color-on-tertiary-container: #ffd7f6;
+    
+    --md-sys-color-background: #1a1c1e;
+    --md-sys-color-on-background: #e2e2e6;
+    --md-sys-color-surface: #1a1c1e;
+    --md-sys-color-on-surface: #e2e2e6;
     --md-sys-color-surface-variant: #43474e;
     --md-sys-color-on-surface-variant: #c3c7d0;
-
     --md-sys-color-outline: #8d9199;
     --md-sys-color-outline-variant: #43474e;
-
-    --md-sys-color-surface-container-lowest: #080a0d;
-    --md-sys-color-surface-container-low: #171b22;
-    --md-sys-color-surface-container: #1b2028;
-    --md-sys-color-surface-container-high: #262a32;
-    --md-sys-color-surface-container-highest: #31353e;
-
-    /* Legacy Dark Mappings */
-    --primary-hover: #bde0ff;
-    --primary-glow: rgba(158, 202, 255, 0.06);
-    --success: #32caa4;
-    --success-bg: rgba(50, 202, 164, 0.12);
-    --success-border: rgba(50, 202, 164, 0.3);
-    --success-glow: rgba(50, 202, 164, 0.2);
-    --warning: #ffb85d;
+    
+    --md-sys-color-surface-container-lowest: #0e1113;
+    --md-sys-color-surface-container-low: #1c1e22;
+    --md-sys-color-surface-container: #202226;
+    --md-sys-color-surface-container-high: #2a2c31;
+    --md-sys-color-surface-container-highest: #35373c;
+    
+    --success: #a4c8ff;
+  }
+  
+  body.theme-golden-sun {
+    --md-sys-color-primary: #ebc248;
+    --md-sys-color-on-primary: #3e2e00;
+    --md-sys-color-primary-container: #5a4300;
+    --md-sys-color-on-primary-container: #ffdf94;
+    
+    --md-sys-color-secondary: #d3c6a4;
+    --md-sys-color-on-secondary: #393016;
+    --md-sys-color-secondary-container: #50472a;
+    --md-sys-color-on-secondary-container: #f0e2be;
+    
+    --md-sys-color-tertiary: #accfaa;
+    --md-sys-color-on-tertiary: #193720;
+    --md-sys-color-tertiary-container: #2f4e35;
+    --md-sys-color-on-tertiary-container: #c7eccb;
+    
+    --md-sys-color-background: #1e1b13;
+    --md-sys-color-on-background: #e7e2d9;
+    --md-sys-color-surface: #1e1b13;
+    --md-sys-color-on-surface: #e7e2d9;
+    --md-sys-color-surface-variant: #4d4639;
+    --md-sys-color-on-surface-variant: #d0c5b4;
+    --md-sys-color-outline: #989080;
+    --md-sys-color-outline-variant: #4d4639;
+    
+    --md-sys-color-surface-container-lowest: #0f0d08;
+    --md-sys-color-surface-container-low: #1f1c17;
+    --md-sys-color-surface-container: #23201a;
+    --md-sys-color-surface-container-high: #2d2a23;
+    --md-sys-color-surface-container-highest: #38352e;
+    
+    --success: #accfaa;
+  }
+  
+  body.theme-terracotta {
+    --md-sys-color-primary: #ffb4ab;
+    --md-sys-color-on-primary: #690005;
+    --md-sys-color-primary-container: #93000a;
+    --md-sys-color-on-primary-container: #ffdad6;
+    
+    --md-sys-color-secondary: #e7bdb7;
+    --md-sys-color-on-secondary: #442926;
+    --md-sys-color-secondary-container: #5d3f3b;
+    --md-sys-color-on-secondary-container: #ffdad5;
+    
+    --md-sys-color-tertiary: #dfc385;
+    --md-sys-color-on-tertiary: #3f2e00;
+    --md-sys-color-tertiary-container: #574414;
+    --md-sys-color-on-tertiary-container: #fddf9e;
+    
+    --md-sys-color-background: #201a19;
+    --md-sys-color-on-background: #ede0de;
+    --md-sys-color-surface: #201a19;
+    --md-sys-color-on-surface: #ede0de;
+    --md-sys-color-surface-variant: #534341;
+    --md-sys-color-on-surface-variant: #d8c2be;
+    --md-sys-color-outline: #a08c8a;
+    --md-sys-color-outline-variant: #534341;
+    
+    --md-sys-color-surface-container-lowest: #0e0a0a;
+    --md-sys-color-surface-container-low: #221b1a;
+    --md-sys-color-surface-container: #26201e;
+    --md-sys-color-surface-container-high: #312a28;
+    --md-sys-color-surface-container-highest: #3c3533;
+    
+    --success: #ffb4ab;
   }
 }
 
+/* Explicit class-based overrides for manual dark mode detection */
+body.dark-mode-detected {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+
+/* --- BASICS --- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -161,11 +363,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--md-transition-duration) var(--md-spring-standard),
+              color var(--md-transition-duration) var(--md-spring-standard);
 }
 
 #root {
   width: 100%;
-  max-width: 600px;
+  max-width: 580px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -173,10 +377,65 @@ body {
   margin: 0 auto;
 }
 
-/* Header */
+/* --- THEME CUSTOMIZER WIDGET --- */
+.theme-picker-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px auto 0 auto;
+  padding: 8px 16px;
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--radius-full);
+  width: fit-content;
+  box-shadow: none;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  animation: slideIn 0.4s var(--md-spring-standard);
+}
+
+.theme-picker-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.8px;
+}
+
+.theme-picker-options {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: transform var(--md-transition-duration) var(--md-spring-bouncy), 
+              border-color var(--md-transition-duration) var(--md-spring-standard);
+}
+
+.theme-dot:hover {
+  transform: scale(1.25);
+}
+
+.theme-dot.active {
+  border-color: var(--md-sys-color-on-surface);
+  transform: scale(1.15);
+}
+
+.theme-dot.lagos-lagoon { background-color: #006a6a; }
+.theme-dot.yoruba-indigo { background-color: #005faf; }
+.theme-dot.golden-sun { background-color: #ebc248; }
+.theme-dot.terracotta { background-color: #ba1a1a; }
+
+/* --- BRAND HEADER --- */
 header {
   text-align: center;
-  padding: 24px 0 28px 0;
+  padding: 16px 0 24px 0;
 }
 
 .logo-container {
@@ -184,42 +443,44 @@ header {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .logo-badge {
   background: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
   font-weight: 700;
-  font-size: 14px;
-  padding: 4px 12px;
+  font-size: 13px;
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 h1 {
-  font-size: 26px;
-  font-weight: 400; /* Material 3 favors clean, non-bold display text */
+  font-size: 28px;
+  font-weight: 400; /* Material 3 standard title weight */
   color: var(--md-sys-color-on-background);
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 .subtitle {
   font-size: 14px;
   color: var(--md-sys-color-on-surface-variant);
-  margin-top: 4px;
+  opacity: 0.85;
 }
 
-/* Material Navigation (Pill Navigation) */
+/* --- MATERIAL 3 NAVIGATION BAR --- */
 nav {
   display: flex;
   background: var(--md-sys-color-surface-container);
-  padding: 6px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-xl);
+  padding: 8px 12px;
   margin-bottom: 28px;
-  box-shadow: none;
+  height: 80px;
+  align-items: center;
+  justify-content: space-around;
   border: none;
+  box-shadow: none;
 }
 
 .nav-button {
@@ -228,46 +489,81 @@ nav {
   border: none;
   color: var(--md-sys-color-on-surface-variant);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
-  padding: 12px 6px;
-  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  position: relative;
+  height: 100%;
+  padding-top: 4px;
+  transition: color 0.2s var(--md-spring-standard);
+  outline: none;
 }
 
-.nav-button:hover {
+/* Tall Navigation Indicator Pill */
+.nav-icon-wrapper {
+  position: relative;
+  width: 64px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: transparent;
+  transition: background-color var(--md-transition-duration) var(--md-spring-standard),
+              color var(--md-transition-duration) var(--md-spring-standard),
+              transform var(--md-transition-duration) var(--md-spring-bouncy);
+}
+
+.nav-button:hover .nav-icon-wrapper {
+  background-color: rgba(186, 196, 219, 0.12);
   color: var(--md-sys-color-on-surface);
-  background: rgba(186, 196, 219, 0.12);
 }
 
-.nav-button:active {
-  transform: scale(0.96);
-}
-
-.nav-button.active {
-  background: var(--md-sys-color-secondary-container);
+.nav-button.active .nav-icon-wrapper {
+  background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
+  transform: scale(1.05);
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.nav-button span {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: color 0.2s var(--md-spring-standard), font-weight 0.2s;
+}
+
+.nav-button.active span {
+  color: var(--md-sys-color-on-surface);
   font-weight: 600;
 }
 
-/* Material 3 Card Container */
+/* --- MATERIAL CARD (.PANEL) --- */
 .panel {
   background: var(--md-sys-color-surface-container-low);
   border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--radius-xl); /* Highly rounded M3 card style */
+  border-radius: var(--radius-xl); /* Rounded Card Geometry */
   padding: 28px;
-  box-shadow: var(--elevation-1);
+  box-shadow: var(--elevation-1); /* Tonal Elevation Level 1 */
   margin-bottom: 24px;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  animation: m3Spring 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: box-shadow var(--md-transition-duration) var(--md-spring-standard), 
+              background-color var(--md-transition-duration) var(--md-spring-standard),
+              border-color var(--md-transition-duration) var(--md-spring-standard);
+  animation: m3Spring 0.5s var(--md-spring-standard) both;
 }
 
 .panel:hover {
@@ -275,10 +571,10 @@ nav {
 }
 
 .panel::before {
-  display: none; /* Removed legacy top gradient line */
+  display: none; /* No top divider line on M3 Cards */
 }
 
-/* M3 Toggles (Segmented Control style) */
+/* --- M3 SEGMENTED SWITCH TOGGLES --- */
 .toggle-container {
   display: flex;
   background: var(--md-sys-color-surface-container-high);
@@ -298,7 +594,7 @@ nav {
   color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   z-index: 2;
-  transition: color 0.25s cubic-bezier(0.2, 0, 0, 1), font-weight 0.2s;
+  transition: color var(--md-transition-duration) var(--md-spring-standard), font-weight 0.15s;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -318,7 +614,7 @@ nav {
   width: calc(50% - 4px);
   border-radius: var(--radius-full);
   z-index: 1;
-  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), background-color 0.3s;
+  transition: transform var(--md-transition-duration) var(--md-spring-standard), background-color var(--md-transition-duration);
 }
 
 .toggle-slider.in {
@@ -331,7 +627,6 @@ nav {
   transform: translateX(100%);
 }
 
-/* Use :has selector to dynamically color active text depending on slide position */
 .toggle-container:has(.toggle-slider.in) .toggle-option:first-child {
   color: var(--md-sys-color-on-primary-container);
 }
@@ -340,7 +635,7 @@ nav {
   color: var(--md-sys-color-on-tertiary-container);
 }
 
-/* Forms, Inputs & Floating Styles */
+/* --- FORMS & INPUTS --- */
 .form-group {
   margin-bottom: 20px;
   text-align: left;
@@ -353,20 +648,22 @@ label {
   color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 6px;
   margin-left: 4px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 .input-control {
   width: 100%;
   background: var(--md-sys-color-surface-container-lowest);
   border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--radius-xs); /* Standard M3 Outline input has tighter corners */
+  border-radius: var(--radius-xs); /* Tight corner outlined input */
   color: var(--md-sys-color-on-surface);
   font-family: var(--font-sans);
   font-size: 16px;
   padding: 14px 16px;
   outline: none;
-  transition: border-color 0.2s, border-width 0.1s, padding 0.1s;
+  transition: border-color var(--md-transition-duration) var(--md-spring-standard),
+              border-width 0.1s var(--md-spring-standard),
+              padding 0.1s var(--md-spring-standard);
   box-shadow: none;
 }
 
@@ -377,12 +674,12 @@ label {
 .input-control:focus {
   border-color: var(--md-sys-color-primary);
   border-width: 2px;
-  padding: 13px 15px; /* Compenses for border thickness increase */
+  padding: 13px 15px; /* Compenses outline border shift */
 }
 
 .input-control::placeholder {
   color: var(--md-sys-color-on-surface-variant);
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .input-control:disabled {
@@ -402,7 +699,7 @@ label {
 
 .password-toggle-btn {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
@@ -414,7 +711,7 @@ label {
   justify-content: center;
   padding: 6px;
   border-radius: var(--radius-full);
-  transition: all 0.2s;
+  transition: all 0.2s var(--md-spring-standard);
   z-index: 10;
 }
 
@@ -431,7 +728,9 @@ select.input-control {
   background-size: 18px;
 }
 
-/* Material 3 Filled Button */
+/* --- BUTTONS --- */
+
+/* M3 Filled Button (Primary) */
 .btn-primary {
   width: 100%;
   background: var(--md-sys-color-primary);
@@ -441,9 +740,9 @@ select.input-control {
   font-size: 15px;
   font-weight: 500;
   padding: 14px 24px;
-  border-radius: var(--radius-full); /* Fully rounded M3 pills */
+  border-radius: var(--radius-full); /* Rounded pill shape */
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  transition: all var(--md-transition-duration) var(--md-spring-standard);
   box-shadow: none;
   display: flex;
   align-items: center;
@@ -495,7 +794,7 @@ select.input-control {
   }
 }
 
-/* M3 Text Button or custom outlined buttons */
+/* M3 Text Button */
 .btn-disconnect {
   background: transparent;
   border: none;
@@ -506,7 +805,7 @@ select.input-control {
   cursor: pointer;
   padding: 10px 16px;
   border-radius: var(--radius-full);
-  transition: all 0.2s;
+  transition: all 0.2s var(--md-spring-standard);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -520,7 +819,7 @@ select.input-control {
   background: rgba(186, 26, 26, 0.12);
 }
 
-/* QR Code Scanner Port */
+/* --- QR VIEWPORT SCANNER --- */
 .scanner-viewport {
   width: 100%;
   aspect-ratio: 1;
@@ -603,7 +902,7 @@ select.input-control {
   50% { opacity: 0.9; transform: scale(1.04); }
 }
 
-/* Material 3 Styled Alerts & Banner Cards */
+/* --- BANNER ALERTS (M3 Containers) --- */
 .feedback-card {
   border-radius: var(--radius-lg);
   padding: 16px 20px;
@@ -611,7 +910,7 @@ select.input-control {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  animation: slideIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: slideIn 0.35s var(--md-spring-standard);
   text-align: left;
   border: none;
 }
@@ -688,7 +987,7 @@ select.input-control {
   font-weight: 500;
 }
 
-/* User Card Widget */
+/* --- WIDGET CARDS --- */
 .user-widget {
   background: var(--md-sys-color-surface-container);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -716,7 +1015,7 @@ select.input-control {
   margin-top: 2px;
 }
 
-/* Logs Lists */
+/* --- LOG LISTS --- */
 .logs-list {
   display: flex;
   flex-direction: column;
@@ -732,7 +1031,7 @@ select.input-control {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.2s;
+  transition: background-color var(--md-transition-duration) var(--md-spring-standard);
 }
 
 .log-item:hover {
@@ -779,14 +1078,14 @@ select.input-control {
   opacity: 0.8;
 }
 
-/* Admin panel QR and details */
+/* --- ADMIN QR PRINTING CARDS --- */
 .qr-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 32px;
-  background: #ffffff; /* QR codes require high contrast light backgrounds to scan */
+  background: #ffffff; /* High contrast required for code scanning */
   border-radius: var(--radius-lg);
   margin: 20px 0;
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -818,7 +1117,7 @@ select.input-control {
   max-width: 320px;
 }
 
-/* Badges / Chips */
+/* --- PILLS & BADGES --- */
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -840,7 +1139,7 @@ select.input-control {
   color: var(--md-sys-color-on-tertiary-container);
 }
 
-/* Fallback manual qr panel link */
+/* --- MANUAL CODE ENTRY DRAWER LINK --- */
 .manual-scan-box {
   border-top: 1px solid var(--md-sys-color-outline-variant);
   margin-top: 28px;
@@ -854,7 +1153,7 @@ select.input-control {
   border: none;
   cursor: pointer;
   font-weight: 500;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s var(--md-spring-standard);
 }
 
 .manual-scan-trigger:hover {
@@ -862,7 +1161,7 @@ select.input-control {
   text-decoration: underline;
 }
 
-/* Skeletons */
+/* --- SKELETONS --- */
 .skeleton {
   background: linear-gradient(90deg, 
     var(--md-sys-color-surface-container) 25%, 
@@ -870,7 +1169,7 @@ select.input-control {
     var(--md-sys-color-surface-container) 75%
   );
   background-size: 200% 100%;
-  animation: loadingSkeleton 1.6s infinite ease-in-out;
+  animation: loadingSkeleton 1.6s infinite var(--md-spring-standard);
   border-radius: var(--radius-md);
 }
 
@@ -889,7 +1188,7 @@ select.input-control {
   border-radius: var(--radius-full);
 }
 
-/* Animations */
+/* --- SPRING ANIMATIONS --- */
 @keyframes m3Spring {
   0% {
     transform: translateY(16px) scale(0.98);
