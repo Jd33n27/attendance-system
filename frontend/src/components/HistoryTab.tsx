@@ -39,6 +39,19 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
     });
   };
 
+  const formatDuration = (durationHours: number | undefined | null) => {
+    if (durationHours === undefined || durationHours === null) return '0 mins';
+    const totalMinutes = Math.round(durationHours * 60);
+    if (totalMinutes <= 0) return '0 mins';
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    
+    if (hrs > 0) {
+      return mins > 0 ? `${hrs} hr${hrs > 1 ? 's' : ''} ${mins} min${mins > 1 ? 's' : ''}` : `${hrs} hr${hrs > 1 ? 's' : ''}`;
+    }
+    return `${mins} min${mins > 1 ? 's' : ''}`;
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
       weekday: 'short',
@@ -178,7 +191,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
               <div style={{ textAlign: 'right' }}>
                 {log.clock_out ? (
                   <span className="log-duration">
-                    {log.duration_hours?.toFixed(2) || '0.00'} hrs
+                    {formatDuration(log.duration_hours)}
                   </span>
                 ) : (
                   <span className="status-pill in" style={{ fontSize: '10px' }}>

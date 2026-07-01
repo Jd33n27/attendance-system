@@ -281,6 +281,19 @@ export const AdminTab: React.FC = () => {
     });
   };
 
+  const formatDuration = (durationHours: number | undefined | null) => {
+    if (durationHours === undefined || durationHours === null) return '0 mins';
+    const totalMinutes = Math.round(durationHours * 60);
+    if (totalMinutes <= 0) return '0 mins';
+    const hrs = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    
+    if (hrs > 0) {
+      return mins > 0 ? `${hrs} hr${hrs > 1 ? 's' : ''} ${mins} min${mins > 1 ? 's' : ''}` : `${hrs} hr${hrs > 1 ? 's' : ''}`;
+    }
+    return `${mins} min${mins > 1 ? 's' : ''}`;
+  };
+
   return (
     <div>
       {!isAuthorized ? (
@@ -572,7 +585,7 @@ export const AdminTab: React.FC = () => {
 
                         {log.clock_out ? (
                           <span className="log-duration" style={{ fontSize: '13px' }}>
-                            {log.duration_hours?.toFixed(2)} hrs
+                            {formatDuration(log.duration_hours)}
                           </span>
                         ) : (
                           <span className="status-pill in" style={{ fontSize: '9px' }}>Scanning Shift</span>
