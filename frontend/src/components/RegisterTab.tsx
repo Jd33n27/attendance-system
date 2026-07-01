@@ -66,7 +66,7 @@ export const RegisterTab: React.FC<RegisterTabProps> = ({ onRegisterSuccess, unr
         <div style={{
           border: '1px solid var(--panel-border)',
           background: 'linear-gradient(145deg, var(--input-bg), var(--panel-bg))',
-          borderRadius: '16px',
+          borderRadius: 'var(--radius-xl)',
           padding: '24px',
           maxWidth: '340px',
           margin: '0 auto 24px auto',

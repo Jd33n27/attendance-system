@@ -80,7 +80,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({ user }) => {
             <div style={{
               border: '1px solid var(--panel-border)',
               background: 'linear-gradient(145deg, var(--input-bg), var(--panel-bg))',
-              borderRadius: '16px',
+              borderRadius: 'var(--radius-xl)',
               padding: '20px',
               width: '100%',
               maxWidth: '300px',

@@ -13,35 +13,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [unrecognizedKey, setUnrecognizedKey] = useState<string | null>(null);
   
-  // Material You Dynamic Color theme selection
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    return localStorage.getItem('oalcda_m3_theme') || 'lagos-lagoon';
-  });
 
-  // Apply M3 theme classes to the document body
-  useEffect(() => {
-    document.body.classList.remove('theme-lagos-lagoon', 'theme-yoruba-indigo', 'theme-golden-sun', 'theme-terracotta');
-    document.body.classList.add(`theme-${currentTheme}`);
-    
-    // Auto-detect and sync dark mode settings
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const syncDarkMode = (e: MediaQueryListEvent | MediaQueryList) => {
-      if (e.matches) {
-        document.body.classList.add('dark-mode-detected');
-      } else {
-        document.body.classList.remove('dark-mode-detected');
-      }
-    };
-    
-    syncDarkMode(mq);
-    mq.addEventListener('change', syncDarkMode);
-    return () => mq.removeEventListener('change', syncDarkMode);
-  }, [currentTheme]);
-
-  const handleThemeChange = (themeName: string) => {
-    setCurrentTheme(themeName);
-    localStorage.setItem('oalcda_m3_theme', themeName);
-  };
 
   // Load user profile on mount
   useEffect(() => {
@@ -100,36 +72,7 @@ function App() {
         </div>
         <p className="subtitle">Lagos Local Council Attendance Portal</p>
 
-        {/* Dynamic Color Palette Picker (Material You emulation) */}
-        <div className="theme-picker-container">
-          <span className="theme-picker-label">Dynamic Theme:</span>
-          <div className="theme-picker-options">
-            <button 
-              type="button"
-              className={`theme-dot lagos-lagoon ${currentTheme === 'lagos-lagoon' ? 'active' : ''}`}
-              title="Lagos Lagoon (Teal)"
-              onClick={() => handleThemeChange('lagos-lagoon')}
-            />
-            <button 
-              type="button"
-              className={`theme-dot yoruba-indigo ${currentTheme === 'yoruba-indigo' ? 'active' : ''}`}
-              title="Yoruba Indigo (Blue)"
-              onClick={() => handleThemeChange('yoruba-indigo')}
-            />
-            <button 
-              type="button"
-              className={`theme-dot golden-sun ${currentTheme === 'golden-sun' ? 'active' : ''}`}
-              title="Golden Sun (Amber)"
-              onClick={() => handleThemeChange('golden-sun')}
-            />
-            <button 
-              type="button"
-              className={`theme-dot terracotta ${currentTheme === 'terracotta' ? 'active' : ''}`}
-              title="Terracotta Earth (Red)"
-              onClick={() => handleThemeChange('terracotta')}
-            />
-          </div>
-        </div>
+
       </header>
 
       {/* Navigation Slider */}
@@ -260,7 +203,7 @@ function App() {
               <button 
                 type="button" 
                 className="btn-disconnect" 
-                style={{ border: '1px solid var(--panel-border)', borderRadius: '24px', padding: '12px 24px' }}
+                style={{ border: '1px solid var(--panel-border)', borderRadius: 'var(--radius-xl)', padding: '12px 24px' }}
                 onClick={() => setActiveTab('register')}
               >
                 Go to Registration
